@@ -23,8 +23,6 @@ LOGITS_THRESHOLD = 10.0
 DISTRIB_MAX = LOGITS_THRESHOLD / (1.0 - EXP_DECAY)
 SELECT_THRESHOLD = np.array(ACTION_THRESHOLD) * DISTRIB_MAX
 
-model_path = "final_model_without_maria_91percento.pt"
-
 device = device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 feature_extractor = AutoImageProcessor.from_pretrained(
