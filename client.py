@@ -34,8 +34,6 @@ feature_extractor = AutoImageProcessor.from_pretrained(
 model = Swinv2ForImageClassification.from_pretrained(
     "microsoft/swinv2-small-patch4-window16-256"
 )
-model.classifier = torch.nn.Linear(768, 8, bias=True)
-model.load_state_dict(torch.load(model_path, map_location=device))
 
 
 class Hysteresis:
@@ -148,6 +146,7 @@ def prepare_video_image(frame, logits, distrib, stab_class):
 
 def main():
     argparser = argparse.ArgumentParser()
+    argparser.add_argument("--model", required=True, type=str, help="Model path")
     argparser.add_argument(
         "--display", action="store_true", default=False, help="Interactive mode"
     )
@@ -155,6 +154,10 @@ def main():
         "--calibrate", action="store_true", default=False, help="Show calibration mask"
     )
     args = argparser.parse_args()
+
+    model.classifier = torch.nn.Linear(768, 8, bias=True)
+    model.load_state_dict(torch.load(args.model, map_location=device))
+
     if args.calibrate:
         VIDEO_MASK = cv2.imread("calibration_mask0.png", cv2.IMREAD_COLOR)
     camera = cv2.VideoCapture(0)
